@@ -109,12 +109,11 @@
                         <Font size="18.0" />
                      </font>
                   </Text>
-                  <Slider fx:id="luminanceSlider" blockIncrement="0.0" majorTickUnit="0.1" max="255.0" minorTickCount="0" onMouseReleased="#luminanceControl" prefHeight="16.0" prefWidth="135.0" value="127.5" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.vgrow="SOMETIMES">
+                  <Slider fx:id="luminanceSlider" blockIncrement="0.0" majorTickUnit="5.0" max="255.0" minorTickCount="0" onMouseReleased="#luminanceControl" prefHeight="16.0" prefWidth="135.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="127.5" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.vgrow="SOMETIMES">
                      <GridPane.margin>
                         <Insets left="240.0" />
                      </GridPane.margin>
                   </Slider>
-                  <TextField fx:id="userMinSheep" maxWidth="-Infinity" prefHeight="27.0" prefWidth="268.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
                   <TextField fx:id="userMaxSheep" layoutX="869.0" layoutY="91.0" maxWidth="-Infinity" prefHeight="27.0" prefWidth="268.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="bahbah Bam!! sheep Count" textAlignment="RIGHT" wrappingWidth="245.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                      <font>
@@ -131,6 +130,11 @@
                         <Insets left="30.0" />
                      </GridPane.margin>
                   </CheckBox>
+                  <Slider fx:id="bamSizeSlider" blockIncrement="0.0" majorTickUnit="5.0" max="255.0" minorTickCount="0" onMouseReleased="#bamSizeMove" prefHeight="16.0" prefWidth="135.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="127.5" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets left="240.0" />
+                     </GridPane.margin>
+                  </Slider>
                </children>
             </GridPane>
          </children>

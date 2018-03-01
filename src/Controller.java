@@ -24,10 +24,13 @@ public class Controller {
     @FXML private javafx.scene.text.Text textFileName, textSize, textDimensions;
 //    @FXML private TextField userMinSheep, userMaxSheep;
     @FXML private Slider luminanceSlider;
+    @FXML private Slider bamSizeSlider;
 
-    BufferedImage bufferedImage;
-    WritableImage colorImage, workableImage;
-    Boolean colorActive, greenFilter = false;
+    private BufferedImage bufferedImage;
+    private WritableImage colorImage, workableImage;
+    private Boolean colorActive, greenFilter = false;
+    private ArrayList<Pixel> field;
+    private int bamSensitivity;
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // IMAGE CONTROL METHODS
@@ -88,6 +91,9 @@ public class Controller {
         } catch (IOException e) {
             System.out.println("Image failed to load.");
         }
+
+        fieldInitializer(workableImage, getBamSensitivity());
+
     }
 
     /**
@@ -140,6 +146,8 @@ public class Controller {
                 }
             }
             imageAffect.setImage(workableImage);
+
+            fieldInitializer(workableImage, getBamSensitivity());
         }
         if (greenFilter) {
             for (int x = 0; x < bufferedImage.getWidth(); x++){
@@ -169,6 +177,8 @@ public class Controller {
                 }
             }
             imageAffect.setImage(workableImage);
+
+            fieldInitializer(workableImage, getBamSensitivity());
         }
 
     }
@@ -193,6 +203,9 @@ public class Controller {
                 }
             }
             imageAffect.setImage(workableImage);
+
+            fieldInitializer(workableImage, getBamSensitivity());
+
             greenFilter = true;
         }
         else if (greenFilter){
@@ -209,26 +222,95 @@ public class Controller {
                 }
             }
             imageAffect.setImage(workableImage);
+
+            fieldInitializer(workableImage, getBamSensitivity());
+
             greenFilter = false;
         }
+    }
+
+    private int getBamSensitivity(){
+        bamSensitivity = (int)bamSizeSlider.getValue();
+        System.out.println("Sensitivity: " + bamSensitivity);
+        return bamSensitivity;
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // SHEEP IDENTIFICATION CONTROL METHODS
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public void fieldInitializer(){
-        ArrayList field = new ArrayList();
-        for (int x = 0; x < workableImage.getWidth(); x ++){
-            for (int y = 0; y < workableImage.getHeight(); y ++){
-                int argb = workableImage.getPixelReader().getArgb(x, y);
-                Pixel pixel = new Pixel(x, y, argb);
-                field.add(pixel);
+    @FXML
+    public void bamSizeMove(){
+        //fieldInitializer(workableImage, getBamSize());
+        findSheep(workableImage, getBamSensitivity());
+    }
+
+    public void fieldInitializer(WritableImage img, int bamSize){
+        field = new ArrayList<>();
+        for (int x = 0; x < img.getWidth(); x ++){
+            for (int y = 0; y < img.getHeight(); y ++){
+                int argb = img.getPixelReader().getArgb(x, y);
+                //if (argb > bamSize){
+                    Pixel pixel = new Pixel(x, y, argb);
+                    field.add(pixel);
+                    System.out.println("Pixel Added to Field");
+                //}
             }
         }
-// TODO Add a test now to check the creation of the Pixel and addition to the array.
         System.out.println(field);
 
+        findSheep(img, bamSize);
+
+        //return field;
+    }
+
+    private boolean argbChecker(int argb, int bamSensitivity){
+        int p = argb;
+        //int a = (p>>24) & 0xff;
+        int r = (p>>16) & 0xff;
+        int g = (p>>8) & 0xff;
+        int b =  p & 0xff;
+        if (r > bamSensitivity && g > bamSensitivity && b > bamSensitivity){
+            return true;
+        }
+        return false;
+    }
+
+    // check array starts at 0 but image pixel might be at 1?
+    public void findSheep(WritableImage img, int bamSensitivity){
+        int width = (int) img.getWidth();
+        // Goes through the entire array of pixels
+        for (int i = 0; i < field.size(); i ++){
+            // Checks the pixel to see if it is white / a sheep.
+
+         //   System.out.println("the ARGB value is:" + field.get(i).getArgb());
+
+            if (argbChecker(field.get(i).getArgb(), bamSensitivity)){
+                System.out.println("White pixel");
+                // If Pixel has no parent, it becomes a root.
+                if (field.get(i).getParent() == null) {
+                    field.get(i).setParent(field.get(i));
+                }
+                if (i < field.size() - 1) {
+                    if (argbChecker(field.get(i + 1).getArgb(), bamSensitivity)) {
+                        System.out.println("X Child pixel");
+                        field.get(i + 1).setParent(field.get(i));
+                    }
+                }
+                if (i < field.size() - width ){
+                    if (argbChecker(field.get(i + width).getArgb(), bamSensitivity)){
+                        System.out.println("Y Child pixel");
+                        field.get(i + width).setParent(field.get(i));
+                    }
+                }
+            } else System.out.println("NOT A WHITE PIXEL");
+        }
+        System.out.println("End of find sheep");
+        for (int i = 0; i < field.size(); i ++){
+            if (field.get(i).getParent() == field.get(i)){
+                System.out.println("Root Pixel");
+            }
+        }
     }
 
     /**
