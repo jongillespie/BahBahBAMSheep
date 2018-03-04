@@ -2,6 +2,7 @@
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -21,10 +22,11 @@ public class Controller {
 
     @FXML private ImageView iconOpenImage, iconExit;
     @FXML private ImageView imageDisp, imageAffect;
-    @FXML private javafx.scene.text.Text textFileName, textSize, textDimensions;
+    @FXML private javafx.scene.text.Text textFileName, textSize, textDimensions, sheepCountDisp;
 //    @FXML private TextField userMinSheep, userMaxSheep;
     @FXML private Slider luminanceSlider;
     @FXML private Slider bamSizeSlider;
+    @FXML private Button outlineButton;
 
     private BufferedImage bufferedImage;
     private WritableImage colorImage, workableImage;
@@ -294,13 +296,13 @@ public class Controller {
                 if (i < field.size() - 1) {
                     if (argbChecker(field.get(i + 1).getArgb(), bamSensitivity)) {
                         System.out.println("X Child pixel");
-                        field.get(i + 1).setParent(field.get(i));
+                        field.get(i + 1).setParent(field.get(i).getParent());
                     }
                 }
                 if (i < field.size() - width ){
                     if (argbChecker(field.get(i + width).getArgb(), bamSensitivity)){
                         System.out.println("Y Child pixel");
-                        field.get(i + width).setParent(field.get(i));
+                        field.get(i + width).setParent(field.get(i).getParent());
                     }
                 }
             } else System.out.println("NOT A WHITE PIXEL");
@@ -311,6 +313,58 @@ public class Controller {
                 System.out.println("Root Pixel");
             }
         }
+
+    }
+
+    @FXML
+    public void sheepOutline() { //int size){
+        int sheepCount = 0;
+        // for each pixel in the field
+        for (int i = 0; i < field.size(); i ++) {
+            // if the pixel is a root
+            if (field.get(i).getParent() == field.get(i)) {
+                // sets the root to be the square
+                int xMin = field.get(i).getX();
+                int yMin = field.get(i).getY();
+                int xMax = field.get(i).getX();
+                int yMax = field.get(i).getY();
+                // find all the children
+                for (int p = 0; p < field.size(); p ++) {
+                    // checks the child is of the root
+                    if (field.get(p).getParent() == field.get(i)){
+                        // if the child's x max is bigger than the previous max, make it the max.
+                        if (field.get(p).getX() > xMax){
+                            xMax = field.get(p).getX();
+                        }
+                        // if the child's y max is bigger than the previous max, make it the max.
+                        if (field.get(p).getY() > yMax){
+                            yMax = field.get(p).getY();
+                        }
+                    }
+                }
+                // calculate the size of the square
+                int length = xMax - xMin;
+                int height = yMax - yMin;
+                int area = length * height;
+                if (area > 0){
+                    System.out.println("Sheep size: " + area);
+                    sheepCount += 1;
+                }
+                // draw the box
+                PixelWriter rects = workableImage.getPixelWriter();
+                for (int x = xMin; x <= xMax; x++){
+                    rects.setColor(x, yMin, Color.BLUE);
+                    rects.setColor(x, yMax, Color.BLUE);
+                }
+                for (int y = yMin; y <= yMax; y++){
+                    rects.setColor(xMin, y, Color.BLUE);
+                    rects.setColor(xMax, y, Color.BLUE);
+                }
+            }
+        }
+        System.out.println("Total Sheep: " + sheepCount);
+        sheepCountDisp.setText(String.valueOf(sheepCount));
+
     }
 
     /**
