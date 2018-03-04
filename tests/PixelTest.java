@@ -1,5 +1,3 @@
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -8,14 +6,6 @@ class PixelTest {
 
     Pixel pixelParent = new Pixel(1, 1, 255);
     Pixel pixel = new Pixel(2, 2, 255);
-
-    @BeforeEach
-    void setUp() {
-    }
-
-    @AfterEach
-    void tearDown() {
-    }
 
     @Test
     void getParent() {
@@ -48,13 +38,18 @@ class PixelTest {
 
     @Test
     void setY() {
+        pixel.setY(20);
+        assertEquals(20, pixel.getY());
     }
 
     @Test
     void getArgb() {
+        assertEquals(255, pixel.getArgb());
     }
 
     @Test
     void setArgb() {
+        pixel.setArgb(200);
+        assertEquals(200, pixel.getArgb());
     }
 }

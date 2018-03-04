@@ -32,7 +32,6 @@ class ControllerTest {
         System.out.println("Got here dude!");
     }
 
-
     @AfterEach
     void tearDown() {
     }
@@ -53,7 +52,6 @@ class ControllerTest {
     void fieldInitializer() {
         //assertEquals(sheepImg.getPixelReader().getArgb(1,1), );
         System.out.println(sheepImg.getHeight());
-        System.out.println("Got here Initialie tes.");
     }
 
     @Test

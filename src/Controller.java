@@ -18,15 +18,17 @@ import org.omg.CORBA.PUBLIC_MEMBER;
 
 import javax.imageio.ImageIO;
 
+/**
+ * Main Controller manages all image loading, filter effects and display execution.
+ * Additionally, in section two - contains all relevant Union-Find-Compression methods to
+ * determine sheep quantity and shape outlines.
+ */
 public class Controller {
 
-    @FXML private ImageView iconOpenImage, iconExit;
     @FXML private ImageView imageDisp, imageAffect;
     @FXML private javafx.scene.text.Text textFileName, textSize, textDimensions, sheepCountDisp;
-//    @FXML private TextField userMinSheep, userMaxSheep;
     @FXML private Slider luminanceSlider;
     @FXML private Slider bamSizeSlider;
-    @FXML private Button outlineButton;
 
     private BufferedImage bufferedImage;
     private WritableImage colorImage, workableImage;
@@ -35,14 +37,14 @@ public class Controller {
     private int bamSensitivity;
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // IMAGE CONTROL METHODS
+    // IMAGE LOAD & FILTER CONTROL METHODS
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     /**
      * Opens an Image and Displays it on both screens.
      */
     @FXML
     public void openImage() {
+        // Opens a file chooser dialog box.
         FileChooser fc = new FileChooser();
         fc.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("All Images", "*.*"),
@@ -51,81 +53,38 @@ public class Controller {
         );
         File selectedFile = fc.showOpenDialog(null);
         try {
+            // Sets the selected file to a buffered image.
             bufferedImage = ImageIO.read(selectedFile);
+            // Creates a color version for reference (Displays Left) and a 'working' image for manipulation (Displays Right)
             colorImage = SwingFXUtils.toFXImage(bufferedImage, null);
-            // Image Details // TODO Get the decimal back for the file size.
+            workableImage = SwingFXUtils.toFXImage(bufferedImage, null);
+            // Displays the details of the file selected.
             textFileName.setText(selectedFile.getName());
             textDimensions.setText(String.valueOf(colorImage.getWidth()) + " x " + String.valueOf(colorImage.getHeight()));
-            double fileSizeMB = selectedFile.length() / (1024 * 1024);
-            textSize.setText(String.valueOf(fileSizeMB) + " MB");
-//            double w = 0;
-//            double h = 0;
-//
-//            double ratioX = imageDisp.getFitWidth() / colorImage.getWidth();
-//            double ratioY = imageDisp.getFitHeight() / colorImage.getHeight();
-//
-//            double reducCoeff = 0;
-//            if(ratioX >= ratioY) {
-//                reducCoeff = ratioY;
-//            } else {
-//                reducCoeff = ratioX;
-//            }
-//
-//            w = colorImage.getWidth() * reducCoeff;
-//            h = colorImage.getHeight() * reducCoeff;
-//
-//            imageDisp.setX((imageDisp.getFitWidth() - w) / 2);
-//            imageDisp.setY((imageDisp.getFitHeight() - h) / 2);
-
-
-            // Display Image
+            double fileSizeMB = selectedFile.length() / ( 1024);
+            textSize.setText(String.valueOf(fileSizeMB) + " KB");
+            // Initialises the color active flag to "on"
             colorActive = true;
+            // Displays Image in both sides of the window.
             imageDisp.setImage(colorImage);
-
-            workableImage = SwingFXUtils.toFXImage(bufferedImage, null);
             imageAffect.setImage(workableImage);
-//            workableImage = SwingFXUtils.toFXImage(bufferedImage, null);
-
-                    //new WritableImage((int) colorImage.getWidth(), (int) colorImage.getHeight());
-           // imageAffect.setImage(workableImage);
-
-           // luminanceControl();
         } catch (IOException e) {
             System.out.println("Image failed to load.");
         }
-
-        fieldInitializer(workableImage, getBamSensitivity());
-
+        // Runs the "Field Initializer"
+        fieldInitializer(workableImage);
     }
 
     /**
-     * Adjusts the right image to isolate black and white
+     * Adjusts the working image on the right to isolate black and white
      */
     @FXML
     public void luminanceControl() {
-        System.out.println("Inside LUM Control");
         double sliderValue = luminanceSlider.getValue();
-        System.out.println("Slider moved to:" + sliderValue);
-//        if (!greenFilter) {
-//            for (int x = 0; x < colorImage.getWidth(); x++) {
-//                for (int y = 0; y < colorImage.getHeight(); y++) {
-//                    Color color = colorImage.getPixelReader().getColor(x, y);
-//                    double red = color.getRed();
-//                    double green = color.getGreen();
-//                    double blue = color.getBlue();
-//                    Color gColor = color;
-//                    if (red >= sliderValue && green >= sliderValue && blue >= sliderValue){
-//                        gColor = color.WHITE;
-//                    } else if (red < sliderValue && green < sliderValue && blue < sliderValue){
-//                        gColor = color.BLACK;
-//                    }
-//                    // look up JPG Gamma formula.
-//                    workableImage.getPixelWriter().setColor(x, y, gColor);
-//                }
-//            }
-//            imageAffect.setImage(workableImage);
-//        }
+        System.out.println("Bam-o-lator moved to: " + sliderValue);
+        // If the Green Filter is off:
         if (!greenFilter) {
+            // for each pixel in the buffered image, check it's value against the luminance controller
             for (int x = 0; x < bufferedImage.getWidth(); x++){
                 for (int y = 0; y < bufferedImage.getHeight(); y++){
                     int p = bufferedImage.getRGB(x, y);
@@ -142,15 +101,14 @@ public class Controller {
                         g = 255;
                         b = 255;
                     }
-                    // TODO look up JPG Gamma formula.
                     int argb = (a<<24) | (r<<16) | (g<<8) |  b;
                     workableImage.getPixelWriter().setArgb(x, y, argb);
                 }
             }
             imageAffect.setImage(workableImage);
-
-            fieldInitializer(workableImage, getBamSensitivity());
+            fieldInitializer(workableImage);
         }
+        // if the green filter is on, the black and white slider performs:
         if (greenFilter) {
             for (int x = 0; x < bufferedImage.getWidth(); x++){
                 for (int y = 0; y < bufferedImage.getHeight(); y++){
@@ -160,8 +118,6 @@ public class Controller {
                     // green filter on so green stays at 0
                     int g = 0;
                     int b = p & 0xff;
-//                    System.out.println("Red: " + r);
-//                    System.out.println("Slider: "+ sliderValue);
                     if (r <= sliderValue && b <= sliderValue){
                         System.out.println("> Red: " + r);
                         r = 0;
@@ -179,19 +135,18 @@ public class Controller {
                 }
             }
             imageAffect.setImage(workableImage);
-
-            fieldInitializer(workableImage, getBamSensitivity());
+            fieldInitializer(workableImage);
         }
 
     }
 
     /**
-     * Removes the green channel from each pixel
+     * Removes the green channel from each pixel in the working image on the right.
      */
     @FXML
     public void greenChannel(){
-        System.out.println("Green Tick Box");
         if (!greenFilter){
+            System.out.println("Green Grass Killer");
             // apply green filter
             for (int x = 0; x < bufferedImage.getWidth(); x++){
                 for (int y = 0; y < bufferedImage.getHeight(); y++){
@@ -205,12 +160,11 @@ public class Controller {
                 }
             }
             imageAffect.setImage(workableImage);
-
-            fieldInitializer(workableImage, getBamSensitivity());
-
+            fieldInitializer(workableImage);
             greenFilter = true;
         }
         else if (greenFilter){
+            System.out.println("Green Grass Grower");
             // remove green filter
             for (int x = 0; x < bufferedImage.getWidth(); x++){
                 for (int y = 0; y < bufferedImage.getHeight(); y++){
@@ -224,98 +178,104 @@ public class Controller {
                 }
             }
             imageAffect.setImage(workableImage);
-
-            fieldInitializer(workableImage, getBamSensitivity());
-
+            fieldInitializer(workableImage);
             greenFilter = false;
         }
-    }
-
-    private int getBamSensitivity(){
-        bamSensitivity = (int)bamSizeSlider.getValue();
-        System.out.println("Sensitivity: " + bamSensitivity);
-        return bamSensitivity;
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // SHEEP IDENTIFICATION CONTROL METHODS
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Trigger for the movement of the Bam-sensitivity slider.
+     */
     @FXML
-    public void bamSizeMove(){
-        //fieldInitializer(workableImage, getBamSize());
-        findSheep(workableImage, getBamSensitivity());
+    public void bamSensitivity(){
+        findSheep(workableImage);
     }
 
-    public void fieldInitializer(WritableImage img, int bamSize){
+    /**
+     * Bam Sensitivity sets the value of the pixel to be included. How WHITE is WHITE...
+     * @return the sensitivity value from the slider with range 0 - 255.
+     */
+    private int getBamSensitivity(){
+        bamSensitivity = (int)bamSizeSlider.getValue();
+        System.out.println("Sensitivity: " + bamSensitivity);
+        return bamSensitivity;
+    }
+
+    /**
+     * Initialises an ArrayList containing all updated pixels from any tweaks of
+     * filters to the working image.
+     * @param img
+     */
+    public void fieldInitializer(WritableImage img){
         field = new ArrayList<>();
         for (int x = 0; x < img.getWidth(); x ++){
             for (int y = 0; y < img.getHeight(); y ++){
                 int argb = img.getPixelReader().getArgb(x, y);
-                //if (argb > bamSize){
-                    Pixel pixel = new Pixel(x, y, argb);
-                    field.add(pixel);
-                    System.out.println("Pixel Added to Field");
-                //}
+                Pixel pixel = new Pixel(x, y, argb);
+                field.add(pixel);
             }
         }
-        System.out.println(field);
-
-        findSheep(img, bamSize);
-
-        //return field;
+        findSheep(img);
     }
 
+    /**
+     * Sheep Finder identifies sheep based on the sensitivity of the pixels in question
+     * @param img Takes in the working image to be analysed.
+     */
+    public void findSheep(WritableImage img) {
+        int sensitivity = getBamSensitivity();
+        int width = (int) img.getWidth();
+        // Goes through the entire array of pixels
+        for (int i = 0; i < field.size(); i++) {
+            // Checks the pixel to see if it is white / a sheep.
+            // System.out.println("the ARGB value is:" + field.get(i).getArgb());
+            if (argbChecker(field.get(i).getArgb(), sensitivity)) {
+                // If Pixel has no parent, it becomes a root.
+                if (field.get(i).getParent() == null) {
+                    field.get(i).setParent(field.get(i));
+                }
+                if (i < field.size() - 1) {
+                    if (argbChecker(field.get(i + 1).getArgb(), sensitivity)) {
+                        field.get(i + 1).setParent(field.get(i).getParent());
+                    }
+                }
+                if (i < field.size() - width) {
+                    if (argbChecker(field.get(i + width).getArgb(), sensitivity)) {
+                        field.get(i + width).setParent(field.get(i).getParent());
+                    }
+                }
+            }
+//        System.out.println("End of find sheep");
+//        for (int i = 0; i < field.size(); i ++){
+//            if (field.get(i).getParent() == field.get(i)){
+//                System.out.println("Root Pixel");
+//            }
+//        }
+        }
+    }
+
+    /**
+     * ARGB Tool for checking the pixels against the sensitivity feature.
+     * @param argb Takes in the ARGB value of the target pixel
+     * @param bamSensitivity Takes in the sensitivity of the pixel to be identified.
+     * @return true if the pixel is whiter than the sensitivity value, or false if it is darker.
+     */
     private boolean argbChecker(int argb, int bamSensitivity){
         int p = argb;
         //int a = (p>>24) & 0xff;
         int r = (p>>16) & 0xff;
         int g = (p>>8) & 0xff;
         int b =  p & 0xff;
-        if (r > bamSensitivity && g > bamSensitivity && b > bamSensitivity){
-            return true;
-        }
-        return false;
+        return r > bamSensitivity && g > bamSensitivity && b > bamSensitivity;
     }
 
-    // check array starts at 0 but image pixel might be at 1?
-    public void findSheep(WritableImage img, int bamSensitivity){
-        int width = (int) img.getWidth();
-        // Goes through the entire array of pixels
-        for (int i = 0; i < field.size(); i ++){
-            // Checks the pixel to see if it is white / a sheep.
-
-         //   System.out.println("the ARGB value is:" + field.get(i).getArgb());
-
-            if (argbChecker(field.get(i).getArgb(), bamSensitivity)){
-                System.out.println("White pixel");
-                // If Pixel has no parent, it becomes a root.
-                if (field.get(i).getParent() == null) {
-                    field.get(i).setParent(field.get(i));
-                }
-                if (i < field.size() - 1) {
-                    if (argbChecker(field.get(i + 1).getArgb(), bamSensitivity)) {
-                        System.out.println("X Child pixel");
-                        field.get(i + 1).setParent(field.get(i).getParent());
-                    }
-                }
-                if (i < field.size() - width ){
-                    if (argbChecker(field.get(i + width).getArgb(), bamSensitivity)){
-                        System.out.println("Y Child pixel");
-                        field.get(i + width).setParent(field.get(i).getParent());
-                    }
-                }
-            } else System.out.println("NOT A WHITE PIXEL");
-        }
-        System.out.println("End of find sheep");
-        for (int i = 0; i < field.size(); i ++){
-            if (field.get(i).getParent() == field.get(i)){
-                System.out.println("Root Pixel");
-            }
-        }
-
-    }
-
+    /**
+     * Finds the root pixels and their children, counting the number of sheep and outlining them in blue.
+     */
     @FXML
     public void sheepOutline() { //int size){
         int sheepCount = 0;
@@ -364,7 +324,6 @@ public class Controller {
         }
         System.out.println("Total Sheep: " + sheepCount);
         sheepCountDisp.setText(String.valueOf(sheepCount));
-
     }
 
     /**
