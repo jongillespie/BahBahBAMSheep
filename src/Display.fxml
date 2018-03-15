@@ -5,7 +5,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -58,6 +57,7 @@
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -65,78 +65,93 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="File Name:" textAlignment="RIGHT" wrappingWidth="180.0">
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="File Name:" textAlignment="RIGHT" wrappingWidth="123.0">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Text>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Dimensions:" textAlignment="RIGHT" wrappingWidth="180.0" GridPane.rowIndex="1">
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Dimensions:" textAlignment="RIGHT" wrappingWidth="121.0" GridPane.rowIndex="1">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Text>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Size:" textAlignment="RIGHT" wrappingWidth="180.0" GridPane.rowIndex="2">
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Size:" textAlignment="RIGHT" wrappingWidth="118.0" GridPane.rowIndex="2">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Text>
-                  <Text fx:id="textFileName" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="RIGHT" wrappingWidth="326.0" GridPane.halignment="RIGHT">
+                  <Text fx:id="textFileName" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="RIGHT" wrappingWidth="251.0" GridPane.halignment="RIGHT">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Text>
-                  <Text fx:id="textDimensions" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="RIGHT" wrappingWidth="317.0" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                  <Text fx:id="textDimensions" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="RIGHT" wrappingWidth="258.0" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Text>
-                  <Text fx:id="textSize" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="RIGHT" wrappingWidth="312.0" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                  <Text fx:id="textSize" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="RIGHT" wrappingWidth="261.0" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Text>
-                  <Text layoutX="10.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Bam-o-lator" textAlignment="RIGHT" wrappingWidth="180.0" GridPane.columnIndex="1">
+                  <Text layoutX="10.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="B&amp;W - Luminance:" textAlignment="RIGHT" wrappingWidth="180.0" GridPane.columnIndex="2">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Text>
-                  <Text layoutX="10.0" layoutY="111.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Bam-sensitivity" textAlignment="RIGHT" wrappingWidth="180.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <Text layoutX="10.0" layoutY="111.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Colour?  Sensitivity:" textAlignment="RIGHT" wrappingWidth="180.0" GridPane.columnIndex="1">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Text>
-                  <Text layoutX="10.0" layoutY="174.0" strokeType="OUTSIDE" strokeWidth="0.0" text="tbd" textAlignment="RIGHT" wrappingWidth="180.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                  <Text layoutX="10.0" layoutY="174.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Outlier Filter:" textAlignment="RIGHT" wrappingWidth="119.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Text>
-                  <Slider fx:id="luminanceSlider" blockIncrement="0.0" majorTickUnit="5.0" max="255.0" minorTickCount="0" onMouseReleased="#luminanceControl" prefHeight="16.0" prefWidth="135.0" showTickMarks="true" snapToTicks="true" value="127.5" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.vgrow="SOMETIMES">
+                  <Slider fx:id="luminanceSlider" blockIncrement="0.0" majorTickUnit="5.0" max="255.0" minorTickCount="0" onMouseReleased="#luminanceControl" prefHeight="16.0" prefWidth="135.0" showTickMarks="true" snapToTicks="true" value="127.5" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.vgrow="SOMETIMES">
                      <GridPane.margin>
                         <Insets left="240.0" />
                      </GridPane.margin>
                   </Slider>
-                  <TextField fx:id="userMaxSheep" layoutX="869.0" layoutY="91.0" maxWidth="-Infinity" prefHeight="27.0" prefWidth="268.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-                  <CheckBox fx:id="greenChannel" mnemonicParsing="false" onAction="#greenChannel" text="Grass Killer On/Off" GridPane.columnIndex="2">
+                  <CheckBox fx:id="greenChannel" mnemonicParsing="false" onAction="#greenChannel" text="Grass Killer On/Off" GridPane.columnIndex="3">
                      <GridPane.margin>
                         <Insets left="30.0" />
                      </GridPane.margin>
                   </CheckBox>
-                  <Slider fx:id="bamSizeSlider" blockIncrement="0.0" majorTickUnit="5.0" max="255.0" minorTickCount="0" onMouseReleased="#bamSensitivity" prefHeight="16.0" prefWidth="135.0" showTickMarks="true" snapToTicks="true" value="127.5" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <Slider fx:id="sensitivitySlider" blockIncrement="0.0" majorTickUnit="10.0" max="255.0" minorTickCount="0" onMouseReleased="#sensitivity" prefHeight="16.0" prefWidth="135.0" showTickMarks="true" snapToTicks="true" value="127.0" GridPane.columnIndex="1">
                      <GridPane.margin>
                         <Insets left="240.0" />
                      </GridPane.margin>
                   </Slider>
-                  <Button fx:id="outlineButton" mnemonicParsing="false" onAction="#sheepOutline" prefHeight="27.0" prefWidth="191.0" text="bahbah-BAMM!!-Counter" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+                  <Button fx:id="outlineButton" mnemonicParsing="false" onAction="#sheepOutline" prefHeight="27.0" prefWidth="191.0" text="bahbah-BAMM!!-Counter" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets />
                      </GridPane.margin>
                   </Button>
-                  <Text fx:id="sheepCountDisp" fill="#282828" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="185.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+                  <Text fx:id="sheepCountDisp" fill="#282828" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="185.0" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2">
                      <font>
                         <Font size="36.0" />
                      </font>
                      <GridPane.margin>
-                        <Insets left="30.0" right="40.0" />
+                        <Insets left="240.0" right="40.0" />
+                     </GridPane.margin>
+                  </Text>
+                  <Slider fx:id="outlierSlider" blockIncrement="0.0" majorTickUnit="10.0" max="500.0" minorTickCount="0" onDragDetected="#outlierDisp" onDragDone="#outlierDisp" onMouseClicked="#outlierDisp" onMouseReleased="#outlierDisp" prefHeight="26.0" prefWidth="226.0" showTickMarks="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin>
+                     <padding>
+                        <Insets left="140.0" />
+                     </padding>
+                  </Slider>
+                  <Text fx:id="outlierDispText" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="274.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets bottom="35.0" left="240.0" />
                      </GridPane.margin>
                   </Text>
                </children>
