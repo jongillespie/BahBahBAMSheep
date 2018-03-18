@@ -95,50 +95,50 @@
                         <Font size="18.0" />
                      </font>
                   </Text>
-                  <Text layoutX="10.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="B&amp;W - Luminance:" textAlignment="RIGHT" wrappingWidth="180.0" GridPane.columnIndex="2">
+                  <Text layoutX="10.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="B&amp;W - Luminance:" textAlignment="RIGHT" wrappingWidth="180.0" GridPane.columnIndex="1">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Text>
-                  <Text layoutX="10.0" layoutY="111.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Colour?  Sensitivity:" textAlignment="RIGHT" wrappingWidth="180.0" GridPane.columnIndex="1">
+                  <Text layoutX="10.0" layoutY="111.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Colour - Sensitivity:" textAlignment="RIGHT" wrappingWidth="180.0" GridPane.columnIndex="2">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Text>
-                  <Text layoutX="10.0" layoutY="174.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Outlier Filter:" textAlignment="RIGHT" wrappingWidth="119.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <Text layoutX="10.0" layoutY="174.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Spec Filter (outlier):" textAlignment="RIGHT" wrappingWidth="119.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Text>
-                  <Slider fx:id="luminanceSlider" blockIncrement="0.0" majorTickUnit="5.0" max="255.0" minorTickCount="0" onMouseReleased="#luminanceControl" prefHeight="16.0" prefWidth="135.0" showTickMarks="true" snapToTicks="true" value="127.5" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.vgrow="SOMETIMES">
+                  <Slider fx:id="luminanceSlider" blockIncrement="0.0" majorTickUnit="5.0" max="255.0" minorTickCount="0" onMouseReleased="#luminanceControl" prefHeight="16.0" prefWidth="135.0" showTickMarks="true" snapToTicks="true" value="127.5" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.vgrow="SOMETIMES">
                      <GridPane.margin>
                         <Insets left="240.0" />
                      </GridPane.margin>
                   </Slider>
-                  <CheckBox fx:id="greenChannel" mnemonicParsing="false" onAction="#greenChannel" text="Grass Killer On/Off" GridPane.columnIndex="3">
+                  <CheckBox fx:id="greenChannel" mnemonicParsing="false" onAction="#greenChannel" text="Grass Killer On/Off" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets left="30.0" />
                      </GridPane.margin>
                   </CheckBox>
-                  <Slider fx:id="sensitivitySlider" blockIncrement="0.0" majorTickUnit="10.0" max="255.0" minorTickCount="0" onMouseReleased="#sensitivity" prefHeight="16.0" prefWidth="135.0" showTickMarks="true" snapToTicks="true" value="127.0" GridPane.columnIndex="1">
+                  <Slider fx:id="sensitivitySlider" blockIncrement="0.0" majorTickUnit="10.0" max="255.0" minorTickCount="0" onMouseReleased="#colorSensitivity" prefHeight="16.0" prefWidth="135.0" showTickMarks="true" snapToTicks="true" value="127.0" GridPane.columnIndex="2">
                      <GridPane.margin>
                         <Insets left="240.0" />
                      </GridPane.margin>
                   </Slider>
-                  <Button fx:id="outlineButton" mnemonicParsing="false" onAction="#sheepOutline" prefHeight="27.0" prefWidth="191.0" text="bahbah-BAMM!!-Counter" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+                  <Button fx:id="bahBamCounterButton" mnemonicParsing="false" onAction="#exeBahBahBAMCounter" prefHeight="27.0" prefWidth="191.0" text="bahbah-BAMM!!-Counter" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                      <GridPane.margin>
-                        <Insets />
+                        <Insets right="30.0" />
                      </GridPane.margin>
                   </Button>
-                  <Text fx:id="sheepCountDisp" fill="#282828" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="185.0" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+                  <Text fx:id="sheepCountDisp" fill="#282828" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="185.0" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="2">
                      <font>
                         <Font size="36.0" />
                      </font>
                      <GridPane.margin>
-                        <Insets left="240.0" right="40.0" />
+                        <Insets right="240.0" />
                      </GridPane.margin>
                   </Text>
-                  <Slider fx:id="outlierSlider" blockIncrement="0.0" majorTickUnit="10.0" max="500.0" minorTickCount="0" onDragDetected="#outlierDisp" onDragDone="#outlierDisp" onMouseClicked="#outlierDisp" onMouseReleased="#outlierDisp" prefHeight="26.0" prefWidth="226.0" showTickMarks="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <Slider fx:id="outlierSlider" blockIncrement="0.0" majorTickUnit="10.0" max="500.0" minorTickCount="0" prefHeight="26.0" prefWidth="240.0" showTickMarks="true" GridPane.columnIndex="2" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets />
                      </GridPane.margin>
@@ -146,7 +146,7 @@
                         <Insets left="140.0" />
                      </padding>
                   </Slider>
-                  <Text fx:id="outlierDispText" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="274.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                  <Text fx:id="outlierDispText" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="274.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
                      <font>
                         <Font size="18.0" />
                      </font>

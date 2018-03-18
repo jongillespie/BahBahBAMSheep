@@ -6,13 +6,22 @@ public class Rectangle {
     private int yMax;
     private int area;
 
-    public Rectangle(int xMin, int xMax, int yMin, int yMax, int area) {
+    private int pixelKids;
+
+    public Rectangle(int xMin, int xMax, int yMin, int yMax, int area, int pixelKids) {
         this.xMin = xMin;
         this.xMax = xMax;
         this.yMin = yMin;
         this.yMax = yMax;
         this.area = area;
+
+        this.pixelKids = pixelKids;
     }
+
+    public int getPixelKids(){
+        return pixelKids;
+    }
+
 
     public int getxMin() {
         return xMin;
