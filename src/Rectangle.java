@@ -6,6 +6,8 @@ public class Rectangle {
     private int yMax;
     private int area;
 
+    private int sheepEstimate = 1;
+
     private int pixelKids;
 
     public Rectangle(int xMin, int xMax, int yMin, int yMax, int area, int pixelKids) {
@@ -41,5 +43,13 @@ public class Rectangle {
 
     public int getArea() {
         return area;
+    }
+
+    public int getSheepEstimate() {
+        return sheepEstimate;
+    }
+
+    public void setSheepEstimate(int sheepEstimate) {
+        this.sheepEstimate = sheepEstimate;
     }
 }

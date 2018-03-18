@@ -10,7 +10,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
@@ -49,7 +48,7 @@
             </ImageView>
          </children>
       </StackPane>
-      <StackPane layoutY="118.0" prefHeight="890.0" prefWidth="1858.0" style="-fx-background-color: #dbf1ff;" AnchorPane.bottomAnchor="187.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="118.0" />
+      <StackPane layoutY="776.0" prefHeight="42.0" prefWidth="1544.0" style="-fx-background-color: #dbf1ff;" AnchorPane.bottomAnchor="187.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="776.0" />
       <StackPane fx:id="paneMenuBar1" layoutY="868.0" prefHeight="189.0" prefWidth="1472.0" style="-fx-background-color: #dbf1ff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
             <GridPane prefWidth="1858.0">
@@ -105,7 +104,7 @@
                         <Font size="18.0" />
                      </font>
                   </Text>
-                  <Text layoutX="10.0" layoutY="174.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Spec Filter (outlier):" textAlignment="RIGHT" wrappingWidth="119.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                  <Text layoutX="10.0" layoutY="174.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Spec Filter (outlier):" textAlignment="RIGHT" wrappingWidth="119.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -115,7 +114,7 @@
                         <Insets left="240.0" />
                      </GridPane.margin>
                   </Slider>
-                  <CheckBox fx:id="greenChannel" mnemonicParsing="false" onAction="#greenChannel" text="Grass Killer On/Off" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <CheckBox fx:id="greenChannel" mnemonicParsing="false" onAction="#greenChannel" text="Grass Killer On/Off" GridPane.columnIndex="3">
                      <GridPane.margin>
                         <Insets left="30.0" />
                      </GridPane.margin>
@@ -125,7 +124,7 @@
                         <Insets left="240.0" />
                      </GridPane.margin>
                   </Slider>
-                  <Button fx:id="bahBamCounterButton" mnemonicParsing="false" onAction="#exeBahBahBAMCounter" prefHeight="27.0" prefWidth="191.0" text="bahbah-BAMM!!-Counter" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                  <Button fx:id="bahBamCounterButton" mnemonicParsing="false" onAction="#exeBahBahBAMCounter" prefHeight="27.0" prefWidth="191.0" text="bahbah-BAMM!!-Counter" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets right="30.0" />
                      </GridPane.margin>
@@ -138,7 +137,7 @@
                         <Insets right="240.0" />
                      </GridPane.margin>
                   </Text>
-                  <Slider fx:id="outlierSlider" blockIncrement="0.0" majorTickUnit="10.0" max="500.0" minorTickCount="0" prefHeight="26.0" prefWidth="240.0" showTickMarks="true" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                  <Slider fx:id="outlierSlider" blockIncrement="0.0" majorTickUnit="10.0" max="500.0" minorTickCount="0" prefHeight="26.0" prefWidth="240.0" showTickMarks="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets />
                      </GridPane.margin>
@@ -154,19 +153,20 @@
                         <Insets bottom="35.0" left="240.0" />
                      </GridPane.margin>
                   </Text>
+                  <Slider fx:id="outlierSlider1" blockIncrement="0.0" majorTickUnit="10.0" max="500.0" minorTickCount="0" prefHeight="26.0" prefWidth="240.0" showTickMarks="true" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                     <padding>
+                        <Insets left="140.0" />
+                     </padding>
+                  </Slider>
                </children>
             </GridPane>
          </children>
       </StackPane>
-      <StackPane fx:id="paneImage" layoutX="-2.0" layoutY="152.0" prefHeight="808.0" prefWidth="1858.0" AnchorPane.bottomAnchor="235.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="152.0">
+      <AnchorPane layoutY="169.0" prefHeight="642.0" prefWidth="1544.0">
          <children>
-            <HBox alignment="CENTER" prefHeight="700.0" prefWidth="1682.0">
-               <children>
-                  <ImageView fx:id="imageDisp" fitHeight="618.0" fitWidth="772.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="imageAffect" fitHeight="618.0" fitWidth="772.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" />
-               </children>
-            </HBox>
+            <ImageView fx:id="imageDisp" fitHeight="618.0" fitWidth="772.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0" />
+            <ImageView fx:id="imageAffect" fitHeight="618.0" fitWidth="772.0" nodeOrientation="INHERIT" onMouseClicked="#sheepTips" onMouseMoved="#sheepTips" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="0.0" />
          </children>
-      </StackPane>
+      </AnchorPane>
    </children>
 </AnchorPane>

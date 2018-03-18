@@ -1,9 +1,12 @@
 
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
@@ -19,6 +22,7 @@ import javafx.scene.image.*;
 import org.omg.CORBA.PUBLIC_MEMBER;
 
 import javax.imageio.ImageIO;
+import javax.tools.Tool;
 
 /**
  * Main Controller manages all image loading, filter effects and display execution.
@@ -35,7 +39,7 @@ public class Controller {
     private WritableImage buffWritableImg, colorImage, workableImage;
     private Boolean colorActive, greenFilter = false;
     private ArrayList<Pixel> field;
-    private ArrayList<Rectangle> rectangles;
+    private ArrayList<Rectangle> rectangles, sheepTangles;
     private ArrayList<Integer> rectsArea, pixelKids;
     private int sensitivity, outlier, luminance, Q1, Q2, Q3, IQR;
 
@@ -86,6 +90,7 @@ public class Controller {
      */
     @FXML
     public void luminanceControl() {
+        sliderTips(luminanceSlider, luminanceSlider.getValue());
         colorActive = false;
         double sliderValue = luminanceSlider.getValue();
         System.out.println("Luminance moved to: " + sliderValue);
@@ -186,6 +191,16 @@ public class Controller {
         colorActive = true;
         imageAffect.setImage(buffWritableImg);
         System.out.println("Colour Sensitivity: " + sensitivitySlider.getValue());
+        sliderTips(sensitivitySlider, sensitivitySlider.getValue());
+    }
+
+
+    @FXML
+    private void sliderTips(Slider slider, Double sliderValue){
+        String value = String.valueOf(sliderValue.intValue());
+        Tooltip tip = new Tooltip();
+        tip.setText(value);
+        slider.setTooltip(tip);
     }
 
     /**
@@ -208,6 +223,7 @@ public class Controller {
      */
     private int getOutlierFilter(){
         outlier = (int)outlierSlider.getValue();
+        sliderTips(outlierSlider, outlierSlider.getValue());
         return outlier;
     }
 
@@ -370,7 +386,7 @@ public class Controller {
         int sheepBoxAreaAvg;
         int totalSheep;
 
-
+        sheepTangles = new ArrayList<>();
 
         // for each pixel in the field
         for (int p = 0; p < field.size(); p ++) {
@@ -432,6 +448,8 @@ public class Controller {
 
         PixelWriter rects = workableImage.getPixelWriter();
 
+        Tooltip.install(imageAffect, new Tooltip());
+
         int total = 0;
         for (int i = Q1; i < pixelKids.size(); i ++){
             total += pixelKids.get(i);
@@ -459,6 +477,9 @@ public class Controller {
                 }
                 sheepRedBoxCount += 1;
                 //sheepRedBoxAreaSum += pixCount;
+
+                sheepTangles.add(rectangles.get(i));
+
             }
             if (pixCount > (mean + standDev) && pixCount < (mean + (50 * standDev))) { // more than one sheep size         //&& area <= Q3) {
                 for (int x = rectangles.get(i).getxMin(); x <= rectangles.get(i).getxMax(); x++) {
@@ -471,26 +492,48 @@ public class Controller {
                 }
                 sheepBlueBoxCount += 1;
                 //sheepBlueBoxAreaSum += pixCount;
+
+                sheepTangles.add(rectangles.get(i));
+
             }
         }
 
-         totalSheep = sheepRedBoxCount + sheepBlueBoxCount;
-
-
-//        System.out.println("----------------------------------");
-//        System.out.println("Red Box Count:  " + sheepRedBoxCount);
-//        System.out.println("Red Area Sum:   " + sheepRedBoxAreaSum);
-//        System.out.println("Average of Red: " + sheepBoxAreaAvg);
-//        System.out.println("---");
-//        System.out.println("Blue Box Count: " + sheepBlueBoxCount);
-//        System.out.println("Blue Area Sum:  " + sheepBlueBoxAreaSum);
+        totalSheep = sheepRedBoxCount + sheepBlueBoxCount;
         sheepCountDisp.setText(String.valueOf(totalSheep));
         imageAffect.setImage(workableImage);
 
-        for (int i = 0; i < pixelKids.size(); i ++){
-            System.out.println(pixelKids.get(i));
-        }
+//        for (int i = 0; i < pixelKids.size(); i ++){
+//            System.out.println(pixelKids.get(i));
+//        }
+
+        // TODO remove this later
+        // Draw a rectangle over ImageView
+      //  imageAffect.setOnMouseEntered();
+
+
+
     }
+
+    public void sheepTips(){
+        String rando = "Fuck Yeah!";
+        Tooltip tip = new Tooltip();
+        tip.setText(rando);
+        System.out.println("Inside the Sheep Tips");
+        Tooltip.install(imageAffect, tip);
+
+
+        System.out.println(imageAffect.getCursor());
+        System.out.println(imageAffect.getOnMouseMoved());
+
+
+//
+//        for (rectangle : sheepTangles){
+//            if ()
+//        }
+
+
+    }
+
 
     public void standardDeviation(){
         int total = 0;
@@ -525,18 +568,7 @@ public class Controller {
         System.out.println("IQR: " + IQR);
     }
 
-////todo change the IQR to be of the average size of the boxes??
-//    public void IQR(){
-//        Collections.sort(rectsArea);
-//        int length = rectsArea.size();
-//        System.out.println("Length " + length);
-//        Q1 = (int) (.25 * length);
-//        System.out.println("Q1: " + Q1);
-//        Q3 = (int) (.75 * length);
-//        System.out.println("Q3: " + Q3);
-//        IQR = (Q3 - Q1); // TODO this might not be right. its is giving me the middle...
-//        System.out.println("IQR: " + IQR);
-//    }
+
 
     /**
      * Exits the program
