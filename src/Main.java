@@ -3,10 +3,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
+import static javafx.scene.paint.Color.TRANSPARENT;
 
 public class Main extends Application {
 
-    static AnchorPane display;
+    public static AnchorPane display;
+
 
     /**
      * Loads the FXML file for display
@@ -15,9 +19,9 @@ public class Main extends Application {
      */
     @Override
     public void start(Stage stage) throws Exception{
-       display = FXMLLoader.load(getClass().getResource("Display.fxml"));
-       stage.setScene(new Scene(display));
-       stage.show();
+        display = FXMLLoader.load(getClass().getResource("Display.fxml"));
+        stage.setScene(new Scene(display));
+        stage.show();
     }
 
     /**

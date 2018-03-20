@@ -165,7 +165,7 @@
       <AnchorPane layoutY="169.0" prefHeight="642.0" prefWidth="1544.0">
          <children>
             <ImageView fx:id="imageDisp" fitHeight="618.0" fitWidth="772.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0" />
-            <ImageView fx:id="imageAffect" fitHeight="618.0" fitWidth="772.0" nodeOrientation="INHERIT" onMouseClicked="#sheepTips" onMouseMoved="#sheepTips" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="0.0" />
+            <ImageView fx:id="imageAffect" fitHeight="618.0" fitWidth="772.0" nodeOrientation="INHERIT" onMouseClicked="#sheepTips" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="0.0" />
          </children>
       </AnchorPane>
    </children>

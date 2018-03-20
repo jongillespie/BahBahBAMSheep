@@ -2,6 +2,7 @@
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
@@ -22,7 +23,10 @@ import javafx.scene.image.*;
 import org.omg.CORBA.PUBLIC_MEMBER;
 
 import javax.imageio.ImageIO;
+import javax.swing.text.Style;
 import javax.tools.Tool;
+
+import java.awt.MouseInfo;
 
 /**
  * Main Controller manages all image loading, filter effects and display execution.
@@ -381,9 +385,6 @@ public class Controller {
     public void sheepOutline() {
         int sheepRedBoxCount = 0;
         int sheepBlueBoxCount = 0;
-        int sheepRedBoxAreaSum = 0;
-        int sheepBlueBoxAreaSum = 0;
-        int sheepBoxAreaAvg;
         int totalSheep;
 
         sheepTangles = new ArrayList<>();
@@ -424,9 +425,6 @@ public class Controller {
                         }
                     }
                 }
-
-
-
                 // calculate the size of the square
                 int length = xMax - xMin;
                 int height = yMax - yMin;
@@ -443,6 +441,7 @@ public class Controller {
             }
         }
         System.out.println("Outlier Slider: " + outlier);
+
         // Compute the IQR
         IQR();
 
@@ -477,7 +476,7 @@ public class Controller {
                 }
                 sheepRedBoxCount += 1;
                 //sheepRedBoxAreaSum += pixCount;
-
+                rectangles.get(i).setSheepEstimate(1);
                 sheepTangles.add(rectangles.get(i));
 
             }
@@ -492,48 +491,41 @@ public class Controller {
                 }
                 sheepBlueBoxCount += 1;
                 //sheepBlueBoxAreaSum += pixCount;
-
+                rectangles.get(i).setSheepEstimate(2);
                 sheepTangles.add(rectangles.get(i));
-
             }
         }
-
         totalSheep = sheepRedBoxCount + sheepBlueBoxCount;
         sheepCountDisp.setText(String.valueOf(totalSheep));
         imageAffect.setImage(workableImage);
-
-//        for (int i = 0; i < pixelKids.size(); i ++){
-//            System.out.println(pixelKids.get(i));
-//        }
-
-        // TODO remove this later
-        // Draw a rectangle over ImageView
-      //  imageAffect.setOnMouseEntered();
-
-
-
     }
 
-    public void sheepTips(){
-        String rando = "Fuck Yeah!";
+
+
+
+    @FXML
+    public void sheepTips() {
         Tooltip tip = new Tooltip();
-        tip.setText(rando);
-        System.out.println("Inside the Sheep Tips");
-        Tooltip.install(imageAffect, tip);
-
-
-        System.out.println(imageAffect.getCursor());
-        System.out.println(imageAffect.getOnMouseMoved());
-
-
-//
-//        for (rectangle : sheepTangles){
-//            if ()
-//        }
-
-
+        imageAffect.setOnMouseMoved(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                double mouseX = event.getX();
+                double mouseY = event.getY();
+                for (Rectangle sheep : sheepTangles) {
+                    if (mouseX >= sheep.getxMin()
+                            && mouseX <= sheep.getxMax()
+                            && mouseY >= sheep.getyMin()
+                            && mouseY <= sheep.getyMax()) {
+                        String sheepTip = "Estimated Sheep: " + String.valueOf(sheep.getSheepEstimate());
+                        System.out.println("Estimated Sheep: " + sheep.getSheepEstimate());
+                        System.out.println("inside the sheepTipCheck");
+                        tip.setText(sheepTip);
+                        Tooltip.install(imageAffect, tip);
+                    }
+                }
+            }
+        });
     }
-
 
     public void standardDeviation(){
         int total = 0;
@@ -568,8 +560,6 @@ public class Controller {
         System.out.println("IQR: " + IQR);
     }
 
-
-
     /**
      * Exits the program
      */
@@ -578,7 +568,6 @@ public class Controller {
         Platform.exit();
         System.exit(0);
     }
-
 }
 
 
@@ -742,3 +731,5 @@ public class Controller {
 //        sheepCountDisp.setText(String.valueOf(totalSheep));
 //        imageAffect.setImage(workableImage);
 //    }
+
+// SHAPE FOR RECTANGLE - NEED TO SCALE... FX ID FOR THE PANE ... GETLAYOUT GETS X Y OF THE IMAGE IN THE PANE .. SET LAYOUT X FOR THE RECTANGLE THAT WAY.. DO THE HEIGHT AND LENGHT IN SIDE THE OBJECT .. ADD A STROKE ... ADD A FILL TO TRANSPARENT .. SETVISIBLE JAVAFX.SCENE.SHAPE.RECTANGLE
