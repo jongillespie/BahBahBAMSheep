@@ -1,33 +1,19 @@
 
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Tooltip;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
-
 import javafx.scene.image.*;
-import org.omg.CORBA.PUBLIC_MEMBER;
-
 import javax.imageio.ImageIO;
-import javax.swing.text.Style;
-import javax.tools.Tool;
-
-import java.awt.MouseInfo;
 
 /**
  * Main Controller manages all image loading, filter effects and display execution.
@@ -47,7 +33,6 @@ public class Controller {
     private ArrayList<SheepTangle> rectangles, sheepTangles;
     private ArrayList<Integer> rectsArea, pixelKids;
     private int sensitivity, outlier, luminance, Q1, Q2, Q3, IQR;
-
     private double Q1area, Q2area, Q3area, IQRarea;
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -110,14 +95,10 @@ public class Controller {
                     int r = (p>>16) & 0xff;
                     int g = (p>>8) & 0xff;
                     int b = p & 0xff;
-                    //Old: Calculation of Simple Average: int avg = (r+g+b)/3;
-                    //New: Luminance calculation
+                    // Luminance Calculation
                     double lum = (0.299 * r) + (0.587 * g) + (0.114 * b);
                     int minMax = lum > sliderValue ? 255 : 0;
                     int argb = (a<<24) | (minMax<<16) | (minMax<<8) |  minMax;
-
-                    //TODO  TRY doing a new image write after the green filter!!
-
                     workableImage.getPixelWriter().setArgb(x, y, argb);
                 }
             }
@@ -133,8 +114,7 @@ public class Controller {
                     int r = (p>>16) & 0xff;
                     int g = 0;
                     int b = p & 0xff;
-                    //Old: Calculation of Simple Average: int avg = (r+g+b)/3;
-                    //New: Luminance calculation
+                    // Luminance calculation
                     double lum = (0.299 * r) + (0.587 * g) + (0.114 * b);
                     int minMax = lum > sliderValue ? 255 : 0;
                     int argb = (a<<24) | (minMax<<16) | (minMax<<8) |  minMax;
@@ -200,7 +180,11 @@ public class Controller {
         sliderTips(sensitivitySlider, sensitivitySlider.getValue());
     }
 
-
+    /**
+     *
+     * @param slider
+     * @param sliderValue
+     */
     @FXML
     private void sliderTips(Slider slider, Double sliderValue){
         String value = String.valueOf(sliderValue.intValue());
@@ -280,41 +264,8 @@ public class Controller {
         // Goes through the entire array of pixels
         for (int i = 0; i < field.size(); i++) {
             // Checks the pixel to see if it is white / a sheep.
-            // System.out.println("the ARGB value is:" + field.get(i).getArgb());
             if (argbChecker(field.get(i).getArgb(), sensitivity)) { // Am 'I' a White Pixel?
-//                System.out.println("ARGB: " + field.get(i).getArgb());
-
-
                 field.get(i).setParent(findBAM(field.get(i)));
-//                for (int t = 1; t < 2; t++){
-//                    // TO THE RIGHT
-//                    if (i < field.size() - t) {
-//                        if (argbChecker(field.get(i + t).getArgb(), sensitivity)) {
-//                            unionBAM(field.get(i), field.get(i + t));
-//                        }
-//                    }
-//                    // TO THE LEFT
-//                    if (i > t) {
-//                        if (argbChecker(field.get(i - t).getArgb(), sensitivity)) {
-//                            unionBAM(field.get(i), field.get(i - t));
-//                        }
-//                    }
-//                }
-//                for (int t = width; t < width * 2; width++){
-//                    // ABOVE
-//                    if (i > field.size() + t) {
-//                        if (argbChecker(field.get(i - t).getArgb(), sensitivity)) {
-//                            unionBAM(field.get(i), field.get(i - t));
-//                        }
-//                    }
-//                    // BELOW
-//                    if (i < field.size() - t) {
-//                        if (argbChecker(field.get(i + t).getArgb(), sensitivity)) {
-//                            unionBAM(field.get(i), field.get(i + t));
-//                        }
-//                    }
-//                }
-
                 // TO THE RIGHT
                 if (i < field.size() - 1) {
                     if (argbChecker(field.get(i + 1).getArgb(), sensitivity)) {
@@ -343,11 +294,21 @@ public class Controller {
         }
     }
 
+    /**
+     *
+     * @param pixel
+     * @return
+     */
     private Pixel findBAM(Pixel pixel){
         // Returns the original pixel if it is an orphan, or if it is a root. Otherwise, recursively seeks the root.
         return pixel.getParent() == null || pixel.getParent() == pixel ? pixel : findBAM(pixel.getParent());
     }
 
+    /**
+     *
+     * @param target
+     * @param surrounding
+     */
     public void unionBAM(Pixel target, Pixel surrounding){
         Pixel surroundTemp = findBAM(surrounding);
         if (surroundTemp.getParent() == null) surroundTemp.setParent(findBAM(target));
@@ -365,40 +326,23 @@ public class Controller {
         int r = (p>>16) & 0xff;
         int g = (p>>8) & 0xff;
         int b =  p & 0xff;
-//        double lum = (0.299 * r) + (0.587 * g) + (0.114 * b);
-//        return lum > bamSensitivity ? true : false;
         return r > bamSensitivity && g > bamSensitivity && b > bamSensitivity;
     }
 
-    //TODO delete below if not going to display the number outlier on screen
-//    @FXML void outlierDisp(){
-//        workableImage = buffWritableImg;
-//        findSheep(workableImage);
-//        imageAffect.setImage(workableImage);
-//        outlierDispText.setText(String.valueOf((int)outlierSlider.getValue()));
-//    }
-
-//    private Pixel findChildren(Pixel pixel){
-//        return pixel.getParent() == null || pixel.getParent() == pixel ? pixel : findBAM(pixel.getParent());
-//    }
     /**
      * Finds the root pixels and their children, counting the number of sheep and outlining them in blue.
      */
     @FXML
     public void sheepOutline() {
-
         int sheepRedBoxCount = 0;
         int sheepBlueBoxCount = 0;
         int totalSheep;
-
         sheepTangles = new ArrayList<>();
-
         // for each pixel in the field
         for (int p = 0; p < field.size(); p ++) {
             if (field.get(p).getParent() == field.get(p)) { // This pixel is a root pixel
-
+                // adds the first pixel to the count
                 int sheepPixelKids = 1;
-
                 // sets the root to be the square
                 int xMin = field.get(p).getX();
                 int yMin = field.get(p).getY();
@@ -407,10 +351,8 @@ public class Controller {
                 // find all the children
                 for (int c = 0; c < field.size(); c ++) {
                     if (findBAM(field.get(c)) == field.get(p)) { // recursive call to see if a child matches to this root
-
-                        // counts the number of children -  new method for sheep size estimates // TODO TEST!
+                        // counts the number of children -  new method for sheep size estimates
                         sheepPixelKids += 1;
-
                         // if the child's x min is less than the previous min, make it the min.
                         if (field.get(c).getX() < xMin) {
                             xMin = field.get(c).getX();
@@ -445,14 +387,9 @@ public class Controller {
             }
         }
         System.out.println("Outlier Slider: " + outlier);
-
         // Compute the IQR
         IQR();
-
-       // PixelWriter rects = workableImage.getPixelWriter();
-
-       // Tooltip.install(imageAffect, new Tooltip());
-
+        // Compute the Mean and Standard Deviation
         int total = 0;
         for (int i = Q1; i < pixelKids.size(); i ++){
             total += pixelKids.get(i);
@@ -470,81 +407,59 @@ public class Controller {
         for (int i = 0; i < rectangles.size(); i ++){
             int pixCount = rectangles.get(i).getPixelKids();
             if (pixCount > (mean - standDev) && pixCount <= (mean + standDev)) { //|| pixCount < (mean + 2*standDev) && pixCount >= (mean + standDev)) { // one sheep size
+                rectangles.get(i).setSheepEstimate(1);
                 rectangleGenerator(rectangles.get(i).getxMin(),
                         rectangles.get(i).getxMax(),
                         rectangles.get(i).getyMin(),
                         rectangles.get(i).getyMax(),
                         rectangles.get(i).getSheepEstimate(),
                         Color.RED);
-
-//                for (int x = rectangles.get(i).getxMin(); x <= rectangles.get(i).getxMax(); x++) {
-//                    rects.setColor(x, rectangles.get(i).getyMin(), Color.RED);
-//                    rects.setColor(x, rectangles.get(i).getyMax(), Color.RED);
-//                }
-//                for (int y = rectangles.get(i).getyMin(); y <= rectangles.get(i).getyMax(); y++) {
-//                    rects.setColor(rectangles.get(i).getxMin(), y, Color.RED);
-//                    rects.setColor(rectangles.get(i).getxMax(), y, Color.RED);
-//                }
                 sheepRedBoxCount += 1;
-                //sheepRedBoxAreaSum += pixCount;
-                rectangles.get(i).setSheepEstimate(1);
                 sheepTangles.add(rectangles.get(i));
-
             }
-            if (pixCount > (mean + standDev) && pixCount < (mean + (50 * standDev))) { // more than one sheep size         //&& area <= Q3) {
+            if (pixCount > (mean + standDev) && pixCount < (mean + (50 * standDev))) {
+                // Determines the amount of sheep inside a blue box by dividing the total pixels by the standard deviation.
+                int blueEstimate = (int) (pixCount / standDev);
+                rectangles.get(i).setSheepEstimate(blueEstimate);
                 rectangleGenerator(rectangles.get(i).getxMin(),
                         rectangles.get(i).getxMax(),
                         rectangles.get(i).getyMin(),
                         rectangles.get(i).getyMax(),
                         rectangles.get(i).getSheepEstimate(),
                         Color.BLUE);
-
-//                for (int x = rectangles.get(i).getxMin(); x <= rectangles.get(i).getxMax(); x++) {
-//                    rects.setColor(x, rectangles.get(i).getyMin(), Color.BLUE);
-//                    rects.setColor(x, rectangles.get(i).getyMax(), Color.BLUE);
-//                }
-//                for (int y = rectangles.get(i).getyMin(); y <= rectangles.get(i).getyMax(); y++) {
-//                    rects.setColor(rectangles.get(i).getxMin(), y, Color.BLUE);
-//                    rects.setColor(rectangles.get(i).getxMax(), y, Color.BLUE);
-//                }
                 sheepBlueBoxCount += 1;
-                //sheepBlueBoxAreaSum += pixCount;
-                rectangles.get(i).setSheepEstimate(2);
                 sheepTangles.add(rectangles.get(i));
             }
         }
         totalSheep = sheepRedBoxCount + sheepBlueBoxCount;
         sheepCountDisp.setText(String.valueOf(totalSheep));
-
-//        rectangleGenerator(0, 200, 0, 500, 5);
-////        rectangleGenerator(500, 900, 500, 900, 10);
-
         imageAffect.setImage(workableImage);
     }
 
+    /**
+     *
+     * @return
+     */
     public double getImgMinY(){
         double parentY = 152;
         double paneY = imageAffect.getBoundsInParent().getMinY();
         return parentY + paneY;
     }
 
-
+    /**
+     *
+     * @param xMin
+     * @param xMax
+     * @param yMin
+     * @param yMax
+     * @param sheepEstimate
+     * @param color
+     */
     public void rectangleGenerator(int xMin, int xMax, int yMin, int yMax, int sheepEstimate, Color color){
-//        System.out.println("img affect layout x: " + imageAffect.getLayoutX());
-//        System.out.println("img affect layout y: " + imageAffect.getLayoutY());
-//        System.out.println("img affect y" + imageAffect.getY());
-//        System.out.println("fit height" + imageAffect.getFitHeight());
-//        System.out.println("min Y" + imageAffect.getBoundsInParent().getMinY());
-//        System.out.println("img Disp Y: " + imageDisp.getLayoutY());
-
         double heightScale = imageAffect.getBoundsInParent().getHeight() / imageAffect.getImage().getHeight();
-        System.out.println("height scale: " + heightScale);
         double widthScale = imageAffect.getBoundsInParent().getWidth() / imageAffect.getImage().getWidth();
-        System.out.println("width scale: " + widthScale);
-
-        double imgXmin = 772;
+        double imgXmin = 772; // Hard code setting for the xmin in the pane.
         double imgYmin = getImgMinY();
-
         Rectangle r = new Rectangle();
         r.setX((xMin * widthScale) + imgXmin);
         r.setY((yMin * heightScale) + imgYmin);
@@ -561,62 +476,18 @@ public class Controller {
         Main.display.getChildren().add(r);
     }
 
-
-    @FXML
-    public void sheepTips() {
-        Tooltip tip = new Tooltip();
-        imageAffect.setOnMouseMoved(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                double mouseX = event.getX();
-                double mouseY = event.getY();
-                for (SheepTangle sheep : sheepTangles) {
-                    if (mouseX >= sheep.getxMin()
-                            && mouseX <= sheep.getxMax()
-                            && mouseY >= sheep.getyMin()
-                            && mouseY <= sheep.getyMax()) {
-                        String sheepTip = "Estimated Sheep: " + String.valueOf(sheep.getSheepEstimate());
-                        System.out.println("Estimated Sheep: " + sheep.getSheepEstimate());
-                        System.out.println("inside the sheepTipCheck");
-                        tip.setText(sheepTip);
-                        Tooltip.install(imageAffect, tip);
-                    }
-                }
-            }
-        });
-    }
-
-    public void standardDeviation(){
-        int total = 0;
-        for (int i = 0; i < rectsArea.size(); i ++){
-            total += rectsArea.get(i);
-        }
-        double mean = total / rectsArea.size();
-        System.out.println("Mean: " + mean);
-        double sd = 0;
-        for (int i = 0; i < rectsArea.size(); i++)
-        {
-            sd += Math.pow(rectsArea.get(i) - mean, 2) / rectsArea.size();
-        }
-        double standDev = Math.sqrt(sd);
-        System.out.println("StandDev: " + standDev);
-    }
-
     //todo change the IQR to be of the average size of the boxes??
+    /**
+     *
+     */
     public void IQR(){
         Collections.sort(pixelKids);
         int length = pixelKids.size();
-        System.out.println("Length " + length);
         Q1 = (int) (.25 * length);
         int pix1 = pixelKids.get(Q1);
-        System.out.println("Q1: " + Q1);
-        System.out.println("Q1 Pix: " + pix1);
         Q3 = (int) (.75 * length);
         int pix3 = pixelKids.get(Q3);
-        System.out.println("Q3: " + Q3);
-        System.out.println("Q3 Pix: " + pix3);
         IQR = (pix3 - pix1); // TODO this might not be right. its is giving me the middle...
-        System.out.println("IQR: " + IQR);
     }
 
     /**
@@ -628,7 +499,6 @@ public class Controller {
         System.exit(0);
     }
 }
-
 
 /**
  * Junit test what you can - just the methods, dont worry about it if you cant its likely the FX is giving problem
@@ -642,160 +512,3 @@ public class Controller {
  *
  * https://en.wikipedia.org/wiki/Relative_luminance
  */
-
-//    /**
-//     * Finds the root pixels and their children, counting the number of sheep and outlining them in blue.
-//     */
-//    @FXML
-//    public void sheepOutline() {
-//        int sheepRedBoxCount = 0;
-//        int sheepBlueBoxCount = 0;
-//        int sheepRedBoxAreaSum = 0;
-//        int sheepBlueBoxAreaSum = 0;
-//        int sheepBoxAreaAvg;
-//        int totalSheep;
-//
-//        // for each pixel in the field
-//        for (int p = 0; p < field.size(); p ++) {
-//            if (field.get(p).getParent() == field.get(p)) { // This pixel is a root pixel
-//                // sets the root to be the square
-//                int xMin = field.get(p).getX();
-//                int yMin = field.get(p).getY();
-//                int xMax = field.get(p).getX();
-//                int yMax = field.get(p).getY();
-//                // find all the children
-//                for (int c = 0; c < field.size(); c ++) {
-//                    if (findBAM(field.get(c)) == field.get(p)) { // recursive call to see if a child matches to this root
-//                        // if the child's x min is less than the previous min, make it the min.
-//                        if (field.get(c).getX() < xMin) {
-//                            xMin = field.get(c).getX();
-//                        }
-//                        // if the child's y min is less than the previous min, make it min.
-//                        if (field.get(c).getY() < yMin) {
-//                            yMin = field.get(c).getY();
-//                        }
-//                        // if the child's x max is bigger than the previous max, make it the max.
-//                        if (field.get(c).getX() > xMax) {
-//                            xMax = field.get(c).getX();
-//                        }
-//                        // if the child's y max is bigger than the previous max, make it the max.
-//                        if (field.get(c).getY() > yMax) {
-//                            yMax = field.get(c).getY();
-//                        }
-//                    }
-//                }
-//                // calculate the size of the square
-//                int length = xMax - xMin;
-//                int height = yMax - yMin;
-//                int area = length * height;
-//                // if the area of the square is bigger than the set min outlier, it is captured, else ignored.
-//                if (area > getOutlierFilter()){
-//                    Rectangle rectangle = new Rectangle(xMin, xMax, yMin, yMax, area);
-//                    rectangles.add(rectangle);
-//                    // Area stored separately for Inter-quartile Range Calculations.
-//                    rectsArea.add(area);
-//                }
-//            }
-//        }
-//        System.out.println("Outlier Slider: " + outlier);
-//        // Compute the IQR
-//        IQR();
-//
-//        PixelWriter rects = workableImage.getPixelWriter();
-//
-////        for (int i = 0; i < rectangles.size(); i ++){
-////            int area = rectangles.get(i).getArea();
-////            if (area > rectangles.get(Q2).getArea() && area <= rectangles.get(Q3).getArea()) { // one sheep size
-////                for (int x = rectangles.get(i).getxMin(); x <= rectangles.get(i).getxMax(); x++) {
-////                    rects.setColor(x, rectangles.get(i).getyMin(), Color.RED);
-////                    rects.setColor(x, rectangles.get(i).getyMax(), Color.RED);
-////                }
-////                for (int y = rectangles.get(i).getyMin(); y <= rectangles.get(i).getyMax(); y++) {
-////                    rects.setColor(rectangles.get(i).getxMin(), y, Color.RED);
-////                    rects.setColor(rectangles.get(i).getxMax(), y, Color.RED);
-////                }
-////                sheepRedBoxCount += 1;
-////                sheepRedBoxAreaSum += area;
-////            }
-////            if (area > rectangles.get(Q3).getArea() ) { // more than one sheep size         //&& area <= Q3) {
-////                for (int x = rectangles.get(i).getxMin(); x <= rectangles.get(i).getxMax(); x++) {
-////                    rects.setColor(x, rectangles.get(i).getyMin(), Color.BLUE);
-////                    rects.setColor(x, rectangles.get(i).getyMax(), Color.BLUE);
-////                }
-////                for (int y = rectangles.get(i).getyMin(); y <= rectangles.get(i).getyMax(); y++) {
-////                    rects.setColor(rectangles.get(i).getxMin(), y, Color.BLUE);
-////                    rects.setColor(rectangles.get(i).getxMax(), y, Color.BLUE);
-////                }
-////                sheepBlueBoxCount += 1;
-////                sheepBlueBoxAreaSum += area;
-////            }
-////        }
-////        sheepBoxAreaAvg = sheepRedBoxAreaSum / sheepRedBoxCount; // TODO fix the arithmetic exception of divide by zero.
-////        totalSheep = (sheepBlueBoxAreaSum / sheepBoxAreaAvg) + (sheepRedBoxAreaSum / sheepBoxAreaAvg);
-//
-//
-//
-//        int total = 0;
-//        for (int i = 0; i < rectsArea.size(); i ++){
-//            total += rectsArea.get(i);
-//        }
-//        double mean = total / rectsArea.size();
-//        System.out.println("Mean: " + mean);
-//        double sd = 0;
-//        for (int i = 0; i < rectsArea.size(); i++)
-//        {
-//            sd += Math.pow(rectsArea.get(i) - mean, 2) / rectsArea.size();
-//        }
-//        double standDev = Math.sqrt(sd);
-//        System.out.println("StandDev: " + standDev);
-//
-//        for (int i = 0; i < rectangles.size(); i ++){
-//            int area = rectangles.get(i).getArea();
-//            if (area > mean - 2*standDev && area <= mean - standDev || area < mean + 2*standDev && area >= mean + standDev) { // one sheep size
-//                for (int x = rectangles.get(i).getxMin(); x <= rectangles.get(i).getxMax(); x++) {
-//                    rects.setColor(x, rectangles.get(i).getyMin(), Color.RED);
-//                    rects.setColor(x, rectangles.get(i).getyMax(), Color.RED);
-//                }
-//                for (int y = rectangles.get(i).getyMin(); y <= rectangles.get(i).getyMax(); y++) {
-//                    rects.setColor(rectangles.get(i).getxMin(), y, Color.RED);
-//                    rects.setColor(rectangles.get(i).getxMax(), y, Color.RED);
-//                }
-//                sheepRedBoxCount += 1;
-//                sheepRedBoxAreaSum += area;
-//            }
-//            if (area < mean - standDev && area > mean + standDev) { // more than one sheep size         //&& area <= Q3) {
-//                for (int x = rectangles.get(i).getxMin(); x <= rectangles.get(i).getxMax(); x++) {
-//                    rects.setColor(x, rectangles.get(i).getyMin(), Color.BLUE);
-//                    rects.setColor(x, rectangles.get(i).getyMax(), Color.BLUE);
-//                }
-//                for (int y = rectangles.get(i).getyMin(); y <= rectangles.get(i).getyMax(); y++) {
-//                    rects.setColor(rectangles.get(i).getxMin(), y, Color.BLUE);
-//                    rects.setColor(rectangles.get(i).getxMax(), y, Color.BLUE);
-//                }
-//                sheepBlueBoxCount += 1;
-//                sheepBlueBoxAreaSum += area;
-//            }
-//        }
-//
-//        totalSheep = sheepRedBoxCount + sheepBlueBoxCount;
-//
-//
-////        System.out.println("----------------------------------");
-////        System.out.println("Red Box Count:  " + sheepRedBoxCount);
-////        System.out.println("Red Area Sum:   " + sheepRedBoxAreaSum);
-////        System.out.println("Average of Red: " + sheepBoxAreaAvg);
-////        System.out.println("---");
-////        System.out.println("Blue Box Count: " + sheepBlueBoxCount);
-////        System.out.println("Blue Area Sum:  " + sheepBlueBoxAreaSum);
-//        sheepCountDisp.setText(String.valueOf(totalSheep));
-//        imageAffect.setImage(workableImage);
-//    }
-
-// SHAPE FOR RECTANGLE - NEED TO SCALE...
-// FX ID FOR THE PANE ...
-// GETLAYOUT GETS X Y OF THE IMAGE IN THE PANE ..
-// SET LAYOUT X FOR THE RECTANGLE THAT WAY..
-// DO THE HEIGHT AND LENGHT IN SIDE THE OBJECT ..
-// ADD A STROKE ...
-// ADD A FILL TO TRANSPARENT ..
-// SETVISIBLE JAVAFX.SCENE.SHAPE.RECTANGLE
