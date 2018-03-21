@@ -1,4 +1,4 @@
-public class Rectangle {
+public class SheepTangle {
 
     private int xMin;
     private int xMax;
@@ -10,7 +10,7 @@ public class Rectangle {
 
     private int pixelKids;
 
-    public Rectangle(int xMin, int xMax, int yMin, int yMax, int area, int pixelKids) {
+    public SheepTangle(int xMin, int xMax, int yMin, int yMax, int area, int pixelKids) {
         this.xMin = xMin;
         this.xMax = xMax;
         this.yMin = yMin;
