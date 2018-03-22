@@ -25,7 +25,7 @@ public class Controller {
     @FXML private javafx.scene.text.Text textFileName, textSize, textDimensions, sheepCountDisp;
     @FXML public Slider luminanceSlider, sensitivitySlider, outlierSlider;
 
-    private BufferedImage bufferedImage;
+    public BufferedImage bufferedImage;
     private WritableImage buffWritableImg, colorImage, workableImage;
     private Boolean colorActive, greenFilter = false;
     private ArrayList<Pixel> field;
