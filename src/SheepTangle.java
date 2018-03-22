@@ -1,5 +1,6 @@
 /**
- *
+ * Sheep Tangles are created when sheep are found and their pixel counts are above the outlier filters.
+ * Used to keep track of their location and for estimating the sheep count based on pixel numbers in clusters.
  */
 public class SheepTangle {
 
@@ -7,30 +8,27 @@ public class SheepTangle {
     private int xMax;
     private int yMin;
     private int yMax;
-    private int area;
     private int pixelKids;
     private int sheepEstimate = 1;
 
     /**
-     *
-     * @param xMin
-     * @param xMax
-     * @param yMin
-     * @param yMax
-     * @param area
-     * @param pixelKids
+     * Sheep Tangle main constructor.
+     * @param xMin pixel location
+     * @param xMax pixel location
+     * @param yMin pixel location
+     * @param yMax pixel location
+     * @param pixelKids quantity of adjacent qualifying sheep pixels
      */
-    public SheepTangle(int xMin, int xMax, int yMin, int yMax, int area, int pixelKids) {
+    public SheepTangle(int xMin, int xMax, int yMin, int yMax, int pixelKids) {
         this.xMin = xMin;
         this.xMax = xMax;
         this.yMin = yMin;
         this.yMax = yMax;
-        this.area = area;
         this.pixelKids = pixelKids;
     }
 
     /**
-     *
+     * Provides the pixel count for individual sheep clusters.
      * @return
      */
     public int getPixelKids(){
@@ -38,7 +36,7 @@ public class SheepTangle {
     }
 
     /**
-     *
+     * Provides the x min location
      * @return
      */
     public int getxMin() {
@@ -46,7 +44,7 @@ public class SheepTangle {
     }
 
     /**
-     *
+     * Provides the x max location
      * @return
      */
     public int getxMax() {
@@ -54,7 +52,7 @@ public class SheepTangle {
     }
 
     /**
-     *
+     * Provides the y min location.
      * @return
      */
     public int getyMin() {
@@ -62,7 +60,7 @@ public class SheepTangle {
     }
 
     /**
-     *
+     * Provides the y max location
      * @return
      */
     public int getyMax() {
@@ -70,15 +68,7 @@ public class SheepTangle {
     }
 
     /**
-     *
-     * @return
-     */
-    public int getArea() {
-        return area;
-    }
-
-    /**
-     *
+     * provides the sheep estimated in the sheep cluster
      * @return
      */
     public int getSheepEstimate() {
@@ -86,7 +76,7 @@ public class SheepTangle {
     }
 
     /**
-     *
+     * Sets the estimation based on IQR and Standard Deviation from the controller.
      * @param sheepEstimate
      */
     public void setSheepEstimate(int sheepEstimate) {

@@ -5,10 +5,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 /**
- *
+ * Main Application
+ * Kicks off the program and initialises the FXML display;
+ * as static, to be accessed in the Controller as well.
  */
 public class Main extends Application {
 
+    // Static and accessible in Controller.
     public static AnchorPane display;
 
     /**

@@ -2,6 +2,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Pixel Test of all Pixel Class Methods
+ */
 class PixelTest {
 
     Pixel pixelParent = new Pixel(1, 1, 255);

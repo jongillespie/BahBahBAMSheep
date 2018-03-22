@@ -1,5 +1,6 @@
 /**
- *
+ * The Pixel Class captures relevant pixel data from each imported image for color comparisons
+ * and re-writing of Pixels related to each Filter.
  */
 public class Pixel {
 
@@ -9,10 +10,10 @@ public class Pixel {
     private int argb;
 
     /**
-     *
-     * @param x
-     * @param y
-     * @param argb
+     * Pixel Constructor
+     * @param x pixel's x location
+     * @param y pixel's y location
+     * @param argb the pixel color byte
      */
     public Pixel(int x, int y, int argb){
         this.x = x;
@@ -21,64 +22,64 @@ public class Pixel {
     }
 
     /**
-     *
-     * @return
+     * Get Parent
+     * @return parent address
      */
     public Pixel getParent() {
         return parent;
     }
 
     /**
-     *
-     * @param parent
+     * Set Parent
+     * @param parent address assignment
      */
     public void setParent(Pixel parent) {
         this.parent = parent;
     }
 
     /**
-     *
-     * @return
+     * Get X Value
+     * @return the x Value of the Pixel
      */
     public int getX() {
         return x;
     }
 
     /**
-     *
-     * @param x
+     * Set X Value
+     * @param x is set for the Pixel
      */
     public void setX(int x) {
         this.x = x;
     }
 
     /**
-     *
-     * @return
+     * Get Y Value
+     * @return the Y value.
      */
     public int getY() {
         return y;
     }
 
     /**
-     *
-     * @param y
+     * Set Y Value
+     * @param y is set for the Pixel
      */
     public void setY(int y) {
         this.y = y;
     }
 
     /**
-     *
-     * @return
+     * Get ARGB
+     * @return the ARGB Color Byte
      */
     public int getArgb() {
         return argb;
     }
 
     /**
-     *
-     * @param argb
+     * Set ARGB
+     * @param argb sets the ARGB Byte Value
      */
     public void setArgb(int argb) {
         this.argb = argb;
